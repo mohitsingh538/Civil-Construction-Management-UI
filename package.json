@@ -1,0 +1,44 @@
+{
+  "name": "civil-construction-management",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npm run dev --workspace=web",
+    "build": "npm run build --workspace=web",
+    "cap:sync": "npm run build && npx cap sync && bash scripts/android/strip-capacitor-live-reload.sh",
+    "cap:android": "npm run build && npx cap sync && npx cap open android",
+    "android:run": "bash scripts/android/run-android.sh",
+    "android:avd": "bash scripts/avd/setup-android-avd.sh",
+    "android:avd:start": "bash scripts/avd/setup-android-avd.sh --start",
+    "android:emulator": "bash scripts/avd/setup-android-avd.sh --start --run",
+    "android:dev": "bash scripts/android/android-run-tool.sh --dev",
+    "android:build": "bash scripts/android/android-run-tool.sh --build",
+    "android:reset": "bash scripts/android/android-run-tool.sh --reset",
+    "dev:full": "bash scripts/dev.sh",
+    "dev:full:build": "bash scripts/dev.sh --build",
+    "backend": "bash scripts/dev.sh --backend-only"
+  },
+  "workspaces": [
+    "web",
+    "core"
+  ],
+  "dependencies": {
+    "@capacitor/android": "^8.3.1",
+    "@capacitor/app": "^8.1.0",
+    "@capacitor/cli": "^8.3.1",
+    "@capacitor/core": "^8.3.1",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/keyboard": "^8.0.3",
+    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.2",
+    "axios": "^1.15.2",
+    "chalk": "^4.1.2"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3",
+    "cheerio": "^1.2.0",
+    "chromedriver": "^147.0.4",
+    "cli-progress": "^3.12.0",
+    "selenium-webdriver": "^4.43.0"
+  }
+}

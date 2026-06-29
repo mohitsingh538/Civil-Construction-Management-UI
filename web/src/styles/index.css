@@ -1,0 +1,147 @@
+@import './fonts.css';
+@import './tailwind.css';
+@import './theme.css';
+
+:root {
+  --app-height: 100vh;
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
+  --safe-left: env(safe-area-inset-left);
+  --safe-right: env(safe-area-inset-right);
+  /* Force dark mode for all native form controls (date pickers, select dropdowns, spinners) */
+  color-scheme: dark;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  /* Prevent rubber-band overscroll and browser navigation gestures */
+  overscroll-behavior: none;
+  /* Disable double-tap zoom and 300 ms tap delay; allow native panning */
+  touch-action: manipulation;
+}
+
+body {
+  /* No padding-top: status bar is handled via StatusBar.setOverlaysWebView(false) */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+* {
+  -webkit-overflow-scrolling: touch;
+  /* Suppress Android/iOS long-press text-selection popup on all elements.
+     Restored selectively via .allow-selection on inputs and editable fields. */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  /* Remove the grey tap flash that reveals WebView on every touch */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ─── Allow selection ONLY on genuinely editable / copyable elements ────────
+   Applied to all standard form controls automatically.
+   Add class="allow-selection" to any other element that should be copyable
+   (invoice numbers, generated report text, AI analysis output, phone fields). */
+input,
+textarea,
+[contenteditable="true"],
+.allow-selection {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
+  -webkit-touch-callout: default !important;
+}
+
+/* ─── Prevent image long-press save / drag ghost behaviour ─────────────────
+   On Android WebView, long-pressing an image opens a native "save image"
+   dialog that looks very WebView-y. Pointer-events:none on images prevents
+   that while keeping layout intact. */
+img {
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+/* Restore normal scrolling inside scrollable containers (modal body, lists).
+   touch-action:manipulation on body would otherwise block vertical pan gestures
+   inside overflow:auto elements on some Android WebViews. */
+[data-rsbs-scroll],
+.overflow-y-auto,
+.overflow-y-scroll,
+.overflow-auto,
+.overflow-scroll {
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+}
+
+/* ─── react-datepicker / react-select portal overrides ─────────────────────
+   Ensure calendars and dropdowns rendered via portals always float above
+   modals, bottom-sheets, and any other high-z-index containers. */
+.ndp-popper,
+.react-datepicker-popper {
+  z-index: 99999 !important;
+}
+/* Remove browser appearance from native selects (legacy fallback) */
+select {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* ─── react-spring-bottom-sheet overrides ───────────────────────────────────
+   The library reserves footer space via padding-bottom on [data-rsbs-content]
+   and [data-rsbs-scroll] even when no footer is used. Zero these out so the
+   scroll region ends exactly at the last content element. */
+[data-rsbs-content] {
+  padding-bottom: 0 !important;
+}
+[data-rsbs-scroll] {
+  /* Let our wrapper div control all bottom padding via safe-area-inset-bottom */
+  padding-bottom: 0 !important;
+}
+
+/* ─── Status bar elevation shadow ──────────────────────────────────────────── */
+/* Since overlay=false, the top of the web view is directly below the status bar.
+   This pseudo-element casts a downward shadow that makes the status bar look elevated. */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: transparent;
+  box-shadow: 0 2px 8px 3px rgba(0, 0, 0, 0.45);
+  z-index: 99999;
+  pointer-events: none;
+}
+
+/* ─── Consistent dark-theme form controls ──────────────────────────────────── */
+
+/* Remove native select arrow and replace with a themed chevron */
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem 1rem;
+  padding-right: 2.5rem;
+}
+
+/* Native option list — dark background matching card color */
+option {
+  background-color: #1E1E2E;
+  color: #ffffff;
+}
+
+/* Dark calendar/clock icons for date/time inputs */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.6) sepia(0) brightness(1.2);
+  cursor: pointer;
+  opacity: 0.7;
+}
+
